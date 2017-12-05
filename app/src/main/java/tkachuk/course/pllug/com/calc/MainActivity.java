@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button clear_btn;
     private Button answer_btn;
+    private Button clear_history_btn;
 
     private double valueOne;
     private double valueTwo;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         clear_btn = (Button) findViewById(R.id.clear_btn);
         answer_btn = (Button) findViewById(R.id.answer_btn);
+        clear_history_btn = (Button) findViewById(R.id.clear_history_btn);
     }
 
     private void initListeners() {
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         clear_btn.setOnClickListener(this);
         answer_btn.setOnClickListener(this);
+        clear_history_btn.setOnClickListener(this);
     }
 
     @Override
@@ -155,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nine_btn:
                 io_line_et.setText(io_line_et.getText()+"9");
                 break;
-
             case R.id.null_btn:
                 io_line_et.setText(io_line_et.getText()+"0");
                 break;
@@ -168,31 +171,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                break;
 
             case R.id.divide_btn:
-                valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
-                io_line_et.setText("");
-                currentOper = DIVISION;
-                output_tv.setText(output_tv.getText()+String.valueOf(valueOne)+currentOper);
+                if(!io_line_et.getText().toString().isEmpty()){
+                    valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
+                    io_line_et.setText("");
+                    currentOper = DIVISION;
+                    output_tv.setText(output_tv.getText()+String.valueOf(valueOne)+currentOper);
+                }
                 break;
 
+
             case R.id.multiply_btn:
-                valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
-                io_line_et.setText("");
-                currentOper = MULTIPLICATION;
-                output_tv.setText(output_tv.getText()+String.valueOf(valueOne)+currentOper);
+                if(!io_line_et.getText().toString().isEmpty()) {
+                    valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
+                    io_line_et.setText("");
+                    currentOper = MULTIPLICATION;
+                    output_tv.setText(output_tv.getText() + String.valueOf(valueOne) + currentOper);
+                }
                 break;
 
             case R.id.plus_btn:
-                valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
-                io_line_et.setText("");
-                currentOper = ADDITION;
-                output_tv.setText(output_tv.getText()+String.valueOf(valueOne)+currentOper);
+                if(!io_line_et.getText().toString().isEmpty()) {
+                    valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
+                    io_line_et.setText("");
+                    currentOper = ADDITION;
+                    output_tv.setText(output_tv.getText() + String.valueOf(valueOne) + currentOper);
+                }
                 break;
 
             case R.id.minus_btn:
-                valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
-                io_line_et.setText("");
-                currentOper = SUBTRACTION;
-                output_tv.setText(output_tv.getText()+String.valueOf(valueOne)+currentOper);
+                if(!io_line_et.getText().toString().isEmpty()) {
+                    valueOne = Double.valueOf(String.valueOf(io_line_et.getText()));
+                    io_line_et.setText("");
+                    currentOper = SUBTRACTION;
+                    output_tv.setText(output_tv.getText() + String.valueOf(valueOne) + currentOper);
+                }
                 break;
 
             case R.id.clear_btn:
@@ -200,11 +212,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.answer_btn:
-                valueTwo = Double.valueOf(String.valueOf(io_line_et.getText()));
-                io_line_et.setText(String.valueOf(calculate(valueOne, valueTwo, currentOper)));
-                output_tv.setText(output_tv.getText()+String.valueOf(valueTwo)+" = "+io_line_et.getText());
-                valueOne = 0;
-                valueTwo = 0;
+                if(!io_line_et.getText().toString().isEmpty()) {
+                    try {
+                        valueTwo = Double.valueOf(String.valueOf(io_line_et.getText()));
+                    }catch (NumberFormatException e){
+                        Toast.makeText(this, "Invalid input", Toast.LENGTH_SHORT).show();
+                    }
+                    io_line_et.setText(String.valueOf(calculate(valueOne, valueTwo, currentOper)));
+                    output_tv.setText(output_tv.getText() + String.valueOf(valueTwo) + " = " + io_line_et.getText());
+                    output_tv.setText(output_tv.getText()+"\n");
+                    valueOne = 0;
+                    valueTwo = 0;
+                }
+                break;
+
+            case R.id.clear_history_btn:
+                output_tv.setText(" ");
                 break;
         }
     }
@@ -226,11 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void clear(){
         valueOne = 0;
         valueTwo = 0;
-
         currentOper = ' ';
-
         io_line_et.setText("");
-        output_tv.setText("");
-
     }
 }
